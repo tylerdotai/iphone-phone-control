@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iPhone control — verified navigation</title><style>
+:root{--paper:#f7f6f2;--ink:#202b37;--muted:#526273;--accent:#315b92;--tint:#e9eff6}*{box-sizing:border-box}body{margin:0;background:var(--paper)}.diagram-container{width:100%;overflow-x:auto}svg{display:block;width:100%;min-width:1200px;font-family:Arial,Helvetica,sans-serif}.title{font-family:Georgia,'Times New Roman',serif;font-size:46px;fill:var(--ink)}.name{font-size:28px;font-weight:600;fill:var(--ink)}.copy{font-size:22px;fill:var(--muted)}.tag{font-family:'Courier New',monospace;font-size:16px;fill:var(--muted)}.small{font-size:18px;fill:var(--muted)}.aside{font-family:Georgia,'Times New Roman',serif;font-size:28px;fill:var(--ink)}@media print{.diagram-container{overflow-x:visible}svg{min-width:0}}
+</style></head><body><div class="diagram-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="workflow-title workflow-desc">
+<title id="workflow-title">Observe, act once, verify</title><desc id="workflow-desc">The agent observes the current screen, identifies the intended target, performs one authorized action, and verifies the resulting state before continuing. A prepared draft is not permission to send it.</desc>
+<defs><marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#526273"/></marker></defs>
+<rect width="1200" height="800" fill="#f7f6f2"/>
+<text x="64" y="76" class="tag" letter-spacing="2">THE OPERATING WORKFLOW</text>
+<text x="64" y="140" class="title">Observe. Act once. Verify.</text>
+<text x="64" y="184" class="copy">Successful input is not the same as a successful task.</text>
+<!-- Fresh state is required before returning to the first step. -->
+<path d="M 316 320 V 348" fill="none" stroke="#526273" stroke-width="2" marker-end="url(#workflow-arrow)"/>
+<path d="M 316 444 V 472" fill="none" stroke="#526273" stroke-width="2" marker-end="url(#workflow-arrow)"/>
+<path d="M 316 568 V 596" fill="none" stroke="#526273" stroke-width="2" marker-end="url(#workflow-arrow)"/>
+<g data-node="observe"><rect x="64" y="224" width="504" height="96" rx="8" fill="#fff" stroke="#202b37" stroke-width="1.5"/>
+<text x="88" y="260" class="tag">01</text><text x="140" y="260" class="name">Observe</text><text x="140" y="296" class="copy">Capture the current screen and app.</text></g>
+<g data-node="identify"><rect x="64" y="348" width="504" height="96" rx="8" fill="#fff" stroke="#202b37" stroke-width="1.5"/>
+<text x="88" y="384" class="tag">02</text><text x="140" y="384" class="name">Identify</text><text x="140" y="420" class="copy">Confirm the account, target, and bounds.</text></g>
+<g data-node="act"><rect x="64" y="472" width="504" height="96" rx="8" fill="#fff" stroke="#202b37" stroke-width="1.5"/>
+<text x="88" y="508" class="tag">03</text><text x="140" y="508" class="name">Act once</text><text x="140" y="544" class="copy">Tap or enter only the approved text.</text></g>
+<g data-node="verify"><rect x="64" y="596" width="504" height="96" rx="8" fill="#e9eff6" stroke="#315b92" stroke-width="2"/>
+<text x="88" y="632" class="tag">04</text><text x="140" y="632" class="name">Verify</text><text x="140" y="668" class="copy">Read back the screen or exact draft.</text></g>
+<path d="M 632 224 V 692" stroke="#c7cdd3" stroke-width="1"/>
+<text x="696" y="264" class="aside">A draft is not a send.</text>
+<text x="696" y="312" class="copy">Review the final text.</text><text x="696" y="348" class="copy">Keep the submission button untouched.</text>
+<text x="696" y="432" class="aside">Stop when the target changes.</text>
+<text x="696" y="480" class="copy">Wrong app. Locked screen.</text><text x="696" y="516" class="copy">Unexpected dialog. Uncertain result.</text>
+<text x="696" y="600" class="aside">Continue from fresh evidence.</text>
+<text x="696" y="648" class="copy">Recheck after the keyboard moves.</text>
+<path d="M 64 728 H 1136" stroke="#c7cdd3" stroke-width="1"/>
+<text x="64" y="764" class="small">Procedural guidance for an agent. Human consent and app restrictions still apply.</text>
+</svg></div></body></html>

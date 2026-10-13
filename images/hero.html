@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iPhone control — connection overview</title><style>
+:root{--paper:#f7f6f2;--ink:#202b37;--muted:#526273;--accent:#315b92;--rule:#c7cdd3;--tint:#e9eff6}*{box-sizing:border-box}body{margin:0;background:var(--paper)}.diagram-container{width:100%;overflow-x:auto}svg{display:block;width:100%;min-width:1200px;font-family:Arial,Helvetica,sans-serif}.title{font-family:Georgia,'Times New Roman',serif;font-size:52px;fill:var(--ink)}.name{font-size:28px;font-weight:600;fill:var(--ink)}.copy{font-size:22px;fill:var(--muted)}.mono{font-family:'Courier New',monospace;font-size:16px;fill:var(--muted)}.label{font-family:'Courier New',monospace;font-size:14px;font-weight:600;fill:var(--accent)}.small{font-size:16px;fill:var(--muted)}@media print{.diagram-container{overflow-x:visible}svg{min-width:0}}
+</style></head><body><div class="diagram-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 632" role="img" aria-labelledby="hero-title hero-desc">
+<title id="hero-title">iPhone control</title><desc id="hero-desc">An agent on Linux, macOS or native Windows uses an authorized USB developer connection to operate an iPhone after human trust and Developer Mode setup.</desc>
+<defs><marker id="hero-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#526273"/></marker></defs>
+<rect width="1200" height="632" fill="#f7f6f2"/>
+<text x="64" y="76" class="label" letter-spacing="2">A PORTABLE AGENT SKILL</text>
+<text x="64" y="144" class="title">iPhone control</text>
+<text x="64" y="188" class="copy">Observe and operate through Apple’s developer services.</text>
+<!-- Connectors are drawn before their endpoint nodes. -->
+<path d="M 384 396 H 792" fill="none" stroke="#526273" stroke-width="3" marker-end="url(#hero-arrow)"/>
+<path d="M 680 260 H 936 Q 944 260 944 268 V 316" fill="none" stroke="#526273" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#hero-arrow)"/>
+<rect x="464" y="356" width="232" height="32" fill="#f7f6f2"/>
+<text x="580" y="380" text-anchor="middle" class="mono">USB + TUNNEL</text>
+<g data-node="host"><rect x="64" y="316" width="320" height="164" rx="8" fill="#fff" stroke="#202b37" stroke-width="2"/>
+<path d="M 92 348 H 132 V 380 H 92 Z M 88 388 H 136" fill="none" stroke="#526273" stroke-width="2"/>
+<text x="152" y="368" class="name">Computer</text><text x="96" y="420" class="copy">pymobiledevice3</text><text x="96" y="452" class="mono">Linux / macOS / Windows</text></g>
+<g data-node="human"><rect x="440" y="224" width="240" height="80" rx="8" fill="#fff" stroke="#526273" stroke-width="1.5"/>
+<text x="464" y="256" font-size="22" font-weight="600" fill="#202b37">You authorize</text><text x="464" y="284" class="small">Trust + Developer Mode</text></g>
+<g data-node="android"><rect x="792" y="316" width="320" height="224" rx="8" fill="#e9eff6" stroke="#315b92" stroke-width="2"/>
+<rect x="820" y="348" width="32" height="48" rx="5" fill="none" stroke="#315b92" stroke-width="2"/><path d="M 832 388 H 840" stroke="#315b92" stroke-width="2"/>
+<text x="872" y="380" class="name">iPhone</text><text x="824" y="428" class="copy">Capture the current screen</text><text x="824" y="460" class="copy">Tap, swipe, prepare drafts</text><text x="824" y="504" class="label">DEVELOPER MODE</text></g>
+<path d="M 64 568 H 1136" stroke="#c7cdd3" stroke-width="1"/>
+<text x="64" y="600" class="small">Documented workflow illustration. Not a device screenshot or a permission sandbox.</text>
+</svg></div></body></html>
