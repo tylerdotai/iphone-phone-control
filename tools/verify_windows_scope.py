@@ -30,7 +30,9 @@ def main():
     args = parser.parse_args()
     cases = []
     helper = ROOT / 'scripts/network_control.py'
-    with tempfile.TemporaryDirectory(prefix='iphone-windows-scope-', dir=os.environ['TMPDIR']) as tmp:
+    scratch = Path(os.environ.get('TMPDIR') or os.environ.get('RUNNER_TEMP') or (ROOT.parent / '.iphone-network-cli-test-runs'))
+    scratch.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='iphone-windows-scope-', dir=scratch) as tmp:
         out = Path(tmp) / 'output'
         out.mkdir(mode=0o700)
         base = ['--udid', '00000000-0000000000000000', '--host', '192.168.1.2', '--port', '12345', '--output-dir', str(out)]
