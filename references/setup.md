@@ -8,11 +8,13 @@ permissions, and iOS version. Read the current installation and tunnel sources
 below. Do not overwrite an existing environment or upgrade packages silently.
 Use a dedicated terminal/environment; record changes and task-owned processes.
 Upstream currently documents Python 3.9+; recheck package requirements before
-installation. Do not pin an old test version as a permanent recommendation.
+installation. The included Wi-Fi helper separately requires Python 3.13+ and pins
+pymobiledevice3 11.29.0 because it uses a version-specific provider seam. See
+[Wi-Fi bootstrap and control](wifi.md).
 
 | Host | USB prerequisites | Evidence status |
 | --- | --- | --- |
-| Linux | Native usbmuxd service; approved distribution package/service/USB permission fixes if missing | One trusted USB iPhone exercised |
+| Linux | Native usbmuxd service; approved distribution package/service/USB permission fixes if missing | One trusted USB and same-LAN Wi-Fi iPhone exercised |
 | macOS | System usbmuxd; Python in an isolated environment | Upstream-documented, not tested here |
 | Native Windows | Apple USB drivers and Apple Mobile Device Service; upstream recommends Apple's classic iTunes installer | Upstream-documented, not tested here |
 
@@ -30,7 +32,7 @@ Bash on Linux/macOS:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install pymobiledevice3
+.venv/bin/python -m pip install "pymobiledevice3==11.29.0"
 source .venv/bin/activate
 python -m pip show pymobiledevice3
 ```
@@ -39,7 +41,7 @@ Native Windows PowerShell:
 
 ```powershell
 py -3 -m venv .venv
-& .\.venv\Scripts\python.exe -m pip install pymobiledevice3
+& .\.venv\Scripts\python.exe -m pip install "pymobiledevice3==11.29.0"
 & .\.venv\Scripts\python.exe -m pip show pymobiledevice3
 ```
 

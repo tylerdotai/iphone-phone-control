@@ -14,6 +14,23 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6; verified official tag
         with:
           persist-credentials: false
+      - name: Select preinstalled Python 3.13+ for offline helper contracts
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          candidates = [Path(sys.executable)] + sorted(Path(os.environ["RUNNER_TOOL_CACHE"]).glob("Python/*/x64/bin/python3"), reverse=True)
+          for candidate in candidates:
+              run = subprocess.run([str(candidate), "-c", "import sys, ssl; sys.exit(0 if sys.version_info >= (3,13) and hasattr(ssl.SSLContext, 'set_psk_client_callback') else 1)"], capture_output=True)
+              if run.returncode == 0:
+                  with open(os.environ["GITHUB_PATH"], "a") as stream:
+                      stream.write(str(candidate.parent) + "\n")
+                  break
+          else:
+              raise SystemExit("Preinstalled Python 3.13+ with PSK required; no network install attempted")
+          PY
       - name: Check syntax and public documentation
         run: make lint
       - name: Exercise real repository and rejected mutations
@@ -22,4 +39,4 @@ jobs:
       - name: Emit durable JSON receipt in job log
         if: always()
         run: |
-          python3 -c 'from pathlib import Path; p=Path(".artifacts/e2e.json"); print(p.read_text() if p.exists() else "E2E receipt not produced; check earlier failure")'
+          python3 -c 'from pathlib import Path; [print(p.read_text() if p.exists() else "Required receipt missing: " + str(p)) for p in (Path(".artifacts/e2e.json"), Path(".artifacts/network-cli.json"), Path(".artifacts/windows-scope.json"))]'

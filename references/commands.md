@@ -45,6 +45,13 @@ CLI options override environment defaults and are forbidden here.
 
 Recheck discovery and binding after reconnect; never retarget automatically.
 
+## Wi-Fi is a separate bound transport
+
+For approved same-LAN control after trusted USB bootstrap, use
+[Wi-Fi control](wifi.md) and `scripts/network_control.py`, with explicit UDID,
+private host and current bootstrap port. The USB CLI examples below are not a
+network fallback. The helper supports screenshots and one normalized tap only.
+
 ## One action per observation
 
 The examples assume that exact binding and all approval gates already hold.

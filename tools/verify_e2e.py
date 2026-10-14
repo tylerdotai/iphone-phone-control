@@ -26,7 +26,7 @@ CASES = [
     ("malformed-yaml", "yaml", "write", "templates/session-policy.yaml", "broken: [\n"),
     ("bad-name", "skill", "replace", "SKILL.md", "name: iphone-control|name: Bad_Name"),
     ("long-description", "skill", "replace", "SKILL.md", 'description: "Use when observing or controlling a trusted iPhone."|description: "' + "x" * 61 + '"'),
-    ("numeric-metadata", "skill", "replace", "SKILL.md", 'version: "1.0.0"|version: 1'),
+    ("numeric-metadata", "skill", "replace", "SKILL.md", 'version: "1.1.0"|version: 1'),
     ("live-policy-udid", "policy", "replace", "templates/session-policy.yaml", "exact_udid: null|exact_udid: INERT_DEVICE_IDENTIFIER"),
     ("enforced-policy", "policy", "replace", "templates/session-policy.yaml", "enforced: false|enforced: true"),
     ("missing-image", "link", "append", "README.md", "\n![Missing](assets/not-present.png)\n"),

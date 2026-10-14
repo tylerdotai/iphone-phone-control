@@ -17,9 +17,10 @@ import xml.etree.ElementTree as ET
 import zipfile
 import zlib
 
-# Installed skill payload: exactly six files; repository artwork/tools stay out.
+# Installed skill payload: exactly eight files; repository artwork/tools stay out.
 BUNDLE = {"SKILL.md", "LICENSE", "references/setup.md", "references/commands.md",
-          "references/limits.md", "templates/session-policy.yaml"}
+          "references/limits.md", "templates/session-policy.yaml",
+          "references/wifi.md", "scripts/network_control.py"}
 REQUIRED = sorted(BUNDLE | {"README.md"})
 IGNORED = {".git", ".artifacts", ".venv", "__pycache__"}
 PRIVATE_NAMES = {".env", "id_rsa", "id_ed25519", "adbkey", "adbkey.pub"}
@@ -162,7 +163,7 @@ class Validator:
                         raise ValueError("unsafe archive entry")
                     seen.add(entry.filename)
                     if entry.is_dir():
-                        if relative.rstrip("/") not in {"", "iphone-control", "references", "templates"}:
+                        if relative.rstrip("/") not in {"", "iphone-control", "references", "templates", "scripts"}:
                             raise ValueError("unexpected directory")
                         continue
                     if relative not in BUNDLE or relative in normalized:

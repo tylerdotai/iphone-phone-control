@@ -3,14 +3,16 @@ name: iphone-control
 description: "Use when observing or controlling a trusted iPhone."
 license: MIT
 metadata:
-  version: "1.0.0"
-compatibility: "Host with direct access to the iPhone USB cable; Linux, macOS, or native Windows; Python and pymobiledevice3 plus platform USB services. Newer CoreDevice services require Developer Mode, compatible developer support, and RSD transport. macOS/Windows are upstream-documented, not device-tested here."
+  version: "1.1.0"
+compatibility: "USB and trusted USB bootstrap guidance: Linux, macOS, native Windows with platform USB services; macOS/Windows USB is upstream-documented, not device-tested here. Same-LAN network helper: Linux (device-tested) or POSIX macOS (upstream transport, helper untested); Native Windows network helper unsupported. Helper requires Python 3.13+ and pymobiledevice3 11.29.0. Newer CoreDevice services require Developer Mode, compatible developer support, and RSD transport."
 ---
 
 # iPhone control
 
-Use screenshot-first, exact-device control on the cable-owning host.
-This payload is guidance, not an installed driver, server, or policy engine.
+Use screenshot-first, exact-device control on the authorized host.
+The payload includes a guarded screenshot/tap network helper, not a driver,
+daemon or policy engine. Read [Wi-Fi control](references/wifi.md) for approved
+trusted-USB bootstrap and explicit authenticated same-LAN network calls.
 
 ## Workflow
 
@@ -24,6 +26,8 @@ This payload is guidance, not an installed driver, server, or policy engine.
 3. **Bind.** Read [commands](references/commands.md). Match the full discovered
    UDID to the human-confirmed target. Bind every device command explicitly;
    inspect the installed selector implementation when help omits `--udid`.
+   For Wi-Fi, bind the explicit current peer/port and use the included helper;
+   do not substitute the USB CLI factory.
    Pass: no default-first selection, conflicting transport, or reconnect-any.
 4. **Observe.** Capture and inspect a fresh screenshot before acting. Confirm app,
    orientation, keyboard, field contents, and focus. Read media caveats before

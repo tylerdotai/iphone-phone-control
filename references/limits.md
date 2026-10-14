@@ -10,13 +10,17 @@
 | Printable ASCII input | Exact `Blue` + `tooth` -> `Bluetooth` readback; original query restored |
 | Native HEVC video capture/decoding | 163 distinct decoded frames in the local test |
 | Linux headless-browser HEVC rendering | Failed: installed browser reported unsupported HEVC |
-| macOS and native Windows | Platform/transport support documented upstream; no device tests here |
-| iPhone wireless and arbitrary Unicode input | Not tested here |
+| macOS and native Windows, USB/bootstrap | Platform/USB support documented upstream; no device tests here |
+| POSIX macOS, network helper | Upstream transport; helper untested here |
+| Native Windows, network helper | Native Windows network helper unsupported; POSIX mode privacy checks cannot validate NTFS ACLs |
+| Linux same-LAN Wi-Fi | Authenticated RemotePairing, USB absent, screenshots, approved tap and restoration on iOS 27.0.1 |
+| Arbitrary Unicode input | Not tested here |
 
 These are supplied prior-test results, not tests performed by loading this
 payload. No device identifiers, private receipts, accounts, personal paths, or
-screenshots are distributed. Version 11.29.0 labels that test only; recheck current
-help/source and requirements instead of treating it as a required version pin.
+screenshots are distributed. Version 11.29.0 labels the USB test and is the required pin for the included
+[Wi-Fi helper](wifi.md); its version-specific seam refuses other versions.
+Recheck current help/source for other CLI workflows.
 Do not generalize the successful device/OS combination to every iPhone/iOS.
 
 ## Media consent and fallback

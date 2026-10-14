@@ -1,13 +1,15 @@
 # Descriptive checklist only. No runtime reads or enforces this file.
 name: iphone-control-session-policy
-version: "1.0.0"
+version: "1.1.0"
 enforced: false
 purpose: "Human/agent review gates; not authorization or a security boundary."
 platforms:
   documented: [linux, macos, native-windows]
-  device_tested: [linux-usb-ios27]
+  device_tested: [linux-usb-ios27, linux-wifi-ios27]
 session:
   host: null
+  network_host: null
+  network_port: null
   exact_udid: null # Fill locally; never include a real identifier in a shared copy.
   approved_app: null
   approved_actions: []
@@ -16,13 +18,14 @@ session:
   task_owned_processes: []
 gates:
   before_connection:
-    - "Cable-owning host and human-confirmed exact device match."
+    - "Authorized host and human-confirmed exact device match."
     - "Installed selector source/help confirms environment binding."
     - "No default-first, reconnect-any, or conflicting transport."
     - "Human completes trust, passcode and pairing-secret prompts locally."
   separate_approvals:
     - "Dependencies, USB drivers/services and host permission changes."
     - "Pairing and persistent trust credentials."
+    - "Wi-Fi enablement, USB RemotePairing bootstrap and bounded LAN discovery."
     - "Developer Mode, security impact, restart and local confirmation."
     - "DDI download/cache, Apple personalization and phone installation."
     - "Media side effects, continuous streaming or broader network access."

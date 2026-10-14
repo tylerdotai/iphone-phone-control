@@ -16,7 +16,7 @@
   <p align="center">
     A portable Agent Skill for observing and controlling a human-approved iPhone through pymobiledevice3.
     <br />
-    Native Linux · macOS · native Windows
+    USB guidance: native Linux · macOS · native Windows; network helper: Linux · POSIX macOS only
     <br /><br />
     <a href="SKILL.md"><strong>Explore the skill »</strong></a>
     <br /><br />
@@ -62,7 +62,7 @@ For Android devices, use the separate [Android phone control skill](https://gith
 
 This repository packages **instructions for an agent**, not a remote-control daemon, a jailbreak, or an access-control sandbox. The installed skill is named **`iphone-control`**; the public repository is **`iphone-phone-control`**. Read [SKILL.md](SKILL.md) for the operating contract and [references/](references/) for the detailed procedures.
 
-The skill guides an agent through device discovery, exact-device selection, trusted USB connectivity, screenshots, touch input, ASCII typing, and verification. Its central rule is **observe → approve → act → read back → restore**. A successful CLI exit is not proof that the intended UI changed.
+The skill guides an agent through device discovery, exact-device selection, trusted USB and authenticated same-LAN Wi-Fi connectivity, screenshots, touch input, ASCII typing, and verification. Its central rule is **observe → approve → act → read back → restore**. A successful CLI exit is not proof that the intended UI changed.
 
 The modern path uses pymobiledevice3's **CoreDevice / RemoteXPC developer services** over an RSD tunnel. `--userspace` requests an in-process tunnel without root/admin for supported device versions. On the exercised iOS 27 device, developer support was automatically installed as a personalized **Cryptex1 DeveloperDiskImage (DDI)** using Apple's TSS signing service. These examples do not require a jailbreak, WebDriverAgent, or a Mac running Xcode.
 
@@ -80,14 +80,16 @@ The original diagrams below describe the intended workflow; they are **not phone
 
 ## Platform and Evidence Matrix
 
-**Upstream support is not the same as our live test coverage.** The live evidence comes from one trusted USB iPhone on native Linux, running iOS 27 with an isolated pymobiledevice3 **11.29.0** environment. That version describes the smoke test, not a permanent release pin or a guarantee for future releases.
+**Upstream support is not the same as our live test coverage.** The live evidence comes from one trusted iPhone on native Linux, running iOS 27.0.1 with an isolated pymobiledevice3 **11.29.0** environment. USB and same-LAN Wi-Fi were exercised separately. The included network helper pins **11.29.0** because its provider seam is version-specific; this is not a guarantee for future SDK or iOS releases.
 
 | Platform / path | Upstream mechanism | Evidence for this project |
 | --- | --- | --- |
 | Native Linux, USB | Host `usbmuxd`; userspace RSD tunnel on supported iOS | Live screenshots, tap, ASCII input, touch drag, Home and restoration exercised on one iOS 27 device |
 | macOS, USB | Built-in Apple USB stack; userspace tunnel or opt-in native `remoted` transport | Upstream-supported setup; not device-tested here |
 | Native Windows, USB | Apple USB drivers and Apple Mobile Device Service; userspace tunnel on supported iOS | Upstream-supported setup; not device-tested here; PowerShell examples not executed on Linux |
-| Wireless iPhone | Upstream discovery/pairing depends on host services and transport | Not exercised here; not promised by this package |
+| Native Linux, same-LAN Wi-Fi | Trusted USB bootstrap, authenticated RemotePairing and in-process RSD | USB physically absent; decoded screenshots, approved HID tap and restoration verified on iOS 27.0.1 |
+| POSIX macOS, same-LAN Wi-Fi helper | Upstream RemotePairing transport; POSIX privacy checks | Helper untested on macOS |
+| Native Windows, network helper | Native Windows network helper unsupported; POSIX checks cannot validate NTFS ACLs | Early refusal; USB/bootstrap guidance remains separate |
 | Older iOS | Transport and developer-service availability vary by version | Not exercised; modern CoreDevice command availability must be checked separately |
 
 [Upstream tunnel documentation][tunnels-url] supports no-root USB userspace transport for **iOS 17.4+**, but that transport range does **not** certify the newer CoreDevice screenshot/HID commands on every version. iOS 17.0–17.3.1 has different requirements: Linux/Windows normally need privileged `tunneld`; macOS has a native tunnel path. Do not apply this modern userspace walkthrough blindly to older devices.
@@ -95,7 +97,7 @@ The original diagrams below describe the intended workflow; they are **not phone
 | Capability | Observed result | Boundary |
 | --- | --- | --- |
 | Screenshots | Decoded images at 1260 × 2736 pixels on the exercised phone | Device-specific dimensions, not reusable coordinates; protected/locked screens not certified |
-| Tap | Settings Back action verified by a fresh screenshot | No broad app interaction matrix |
+| Tap | Settings Back action verified by a fresh screenshot; same-LAN Wi-Fi tap and return restored with fresh readback | No broad app interaction matrix |
 | ASCII typing | `Blue` prefix followed by `tooth` produced exact `Bluetooth` in benign Settings search; original query restored | Unicode, password fields, and arbitrary app fields not certified |
 | Touch drag and Home | Home-page change read back, Home returned to the original page, original app resumed | Not a general navigation guarantee |
 | Native video decode | 163 distinct decoded HEVC frames established a changing stream | Not proof of browser mirroring |
@@ -111,7 +113,7 @@ No social message was sent and no unrelated setting was changed in this smoke te
 ### Prerequisites
 
 1. A human-owned or explicitly authorized iPhone, an appropriate data-capable USB cable, and an unlocked device available to its owner.
-2. Git and a current Python compatible with [upstream installation requirements][installation-url] (the current guide states Python 3.9+). Use the package's current requirements if they change.
+2. Git and a Python compatible with [upstream installation requirements][installation-url]. For the included Wi-Fi helper, use **Python 3.13+ with TCP PSK support and pymobiledevice3==11.29.0**; its stricter requirements are separate from the general upstream CLI.
 3. Host USB services:
    * **Linux:** install `usbmuxd` through your distribution's supported package manager. Use PyPI for pymobiledevice3; upstream does not maintain distribution copies of that Python package.
    * **macOS:** the system Apple USB stack is already present. The examples use userspace transport. Native `remoted` is an optional, macOS-only upstream alternative, not an additional tested lane here.
@@ -143,7 +145,7 @@ These commands install host dependencies. Obtain approval first and use a new ta
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install --upgrade pymobiledevice3
+python -m pip install "pymobiledevice3==11.29.0"
 python -m pip show pymobiledevice3
 pymobiledevice3 --help
 ```
@@ -155,17 +157,17 @@ if (Test-Path -LiteralPath .venv) { throw 'Environment exists; inspect it or cho
 py -3 -m venv .venv
 if ($LASTEXITCODE -ne 0) { throw 'Virtual environment creation failed' }
 $IphonePython = (Resolve-Path -LiteralPath .\.venv\Scripts\python.exe).Path
-& $IphonePython -m pip install pymobiledevice3
+& $IphonePython -m pip install "pymobiledevice3==11.29.0"
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
 & $IphonePython -m pip show pymobiledevice3
 & $IphonePython -m pymobiledevice3 --help
 ```
 
-PowerShell uses the exact virtual-environment interpreter without activation or execution-policy changes. Keep `$IphonePython` in this dedicated shell; its absolute path remains valid when changing into the private evidence directory. Record the installed version in private test notes and check its CLI help before use. Installing the latest package does not reproduce the exact 11.29.0 smoke-test environment.
+PowerShell uses the exact virtual-environment interpreter without activation or execution-policy changes. Keep `$IphonePython` in this dedicated shell; its absolute path remains valid when changing into the private evidence directory. Record the installed version in private test notes and check its CLI help before use. Use Python 3.13+ for Wi-Fi; the helper refuses other SDK versions instead of falling back.
 
 #### 3. Install the Agent Skill, without overwriting another skill
 
-Read [SKILL.md](SKILL.md) before installation. The complete installed skill payload contains exactly these **six files**, with relative paths preserved:
+Read [SKILL.md](SKILL.md) before installation. The complete installed skill payload contains exactly these **eight files**, with relative paths preserved:
 
 | File | Purpose |
 | --- | --- |
@@ -175,6 +177,8 @@ Read [SKILL.md](SKILL.md) before installation. The complete installed skill payl
 | [references/commands.md](references/commands.md) | Exact-device commands and observation/action/readback procedures |
 | [references/limits.md](references/limits.md) | Evidence boundaries, safety and privacy limitations |
 | [templates/session-policy.yaml](templates/session-policy.yaml) | Descriptive, unenforced session checklist |
+| [references/wifi.md](references/wifi.md) | Trusted USB bootstrap, current peer discovery, guarded Wi-Fi control and revocation |
+| [scripts/network_control.py](scripts/network_control.py) | Exact-peer screenshot or one normalized tap; no auto-pairing or USB fallback |
 
 Use a **new** directory named `iphone-control` under your agent's skill directory. Do not copy private evidence, `.venv`, source-control data, validation tools, artwork, or local artifacts.
 
@@ -191,7 +195,7 @@ destination = profile_home / "skills" / "iphone-control"
 files = (
     "SKILL.md", "LICENSE",
     "references/setup.md", "references/commands.md", "references/limits.md",
-    "templates/session-policy.yaml",
+    "templates/session-policy.yaml", "references/wifi.md", "scripts/network_control.py",
 )
 for name in files:
     if not (source / name).is_file():
@@ -213,6 +217,20 @@ The session policy is a **descriptive checklist**, with `enforced: false`; it is
 ## Usage
 
 [![Original workflow illustration: select exact device, obtain approval, observe, perform one action, read back, restore and clean up; not a device capture][workflow-image]][workflow-source]
+
+### Wi-Fi: a separate authenticated transport
+
+Read the complete [Wi-Fi guide](references/wifi.md) before using the included helper. First obtain approval for trusted USB bootstrap, `lockdown wifi-connections on`, and `lockdown remotepairing --pair`. Then physically disconnect USB, use bounded approved same-LAN discovery to match the already-confirmed UDID and current RemotePairing address/port, and bind every helper invocation explicitly:
+
+```bash
+python "${HELPER:?Set installed helper path}" --udid "${UDID:?Bind exact phone}" --host "${HOST:?Bind current private peer}" --port "${PORT:?Bind current bootstrap port}" --output-dir "${OUT:?Choose existing private output outside checkout}"
+```
+
+The guide defines these private Bash variables and the Python/SDK requirements for Linux or POSIX macOS. Native Windows network helper unsupported; Windows USB/bootstrap PowerShell guidance is separate. Capture and inspect the PNG before authorizing one normalized tap. A tap invocation adds `--tap X Y` with reviewed integer coordinates, uses a **new** private output directory, and saves `before.png` and `after.png`. On supported hosts, files are exclusively created at POSIX mode 0600; the helper refuses existing outputs and unbound/public peers before SDK import or network access. It never auto-pairs or falls back to USB; exact authenticated provider and RSD identities must match. Its JSON result asks for visual inspection, not automatic passed-input or UI-success confirmation. Stop on errors and restore approved temporary state using fresh readback.
+
+The actual helper's Linux Wi-Fi/Tailscale endpoint path also passed screenshots, approved tap/readback and restoration with USB absent; see [the endpoint workflow](references/wifi.md#optional-tailscale-addressing-while-the-phone-stays-on-wi-fi). Phone and controller were on home Wi-Fi, so no cellular-only or away-from-home operation is claimed. [Cellular developer connectivity is tracked in issue #1](https://github.com/tylerdotai/iphone-phone-control/issues/1).
+
+Pairing/trust persists after process exit: follow the guide's separately approved disconnect, original Wi-Fi-state restoration and revocation procedure. The POSIX macOS network helper is untested here; native Windows cannot run it. The USB CLI procedures below remain a separate lane; their `--userspace` default provider is not a Wi-Fi substitute.
 
 ### 1. Select one exact device before any developer command
 
@@ -365,11 +383,13 @@ Or run the Python entry points directly on a host with Python 3, Bash and Ruby/P
 ```sh
 python3 tools/validate.py
 python3 tools/verify_e2e.py --output .artifacts/e2e.json
+python3 tools/verify_network_cli.py --output .artifacts/network-cli.json
+python3 tools/verify_windows_scope.py --output .artifacts/windows-scope.json
 ```
 
-These checks validate **static package/documentation contracts and real CLI/filesystem mutation cases**, producing a repeatable E2E JSON receipt. They do not control a phone or certify live screenshots, Unicode, all apps, browser codecs, or all host platforms. The CI badge links to the repository's `validate.yml` lane; consult its actual run rather than treating a badge as hardware evidence.
+These checks validate **static package/documentation contracts and real CLI/filesystem mutation cases**, producing repeatable E2E JSON receipts. The network lane exercises the actual helper subprocess with guarded filesystem cases and inert SDK fixtures; a socket barrier prevents network contact. Exact eight-file installed archives are checked for current bytes, missing/extra files and unsafe paths. They do not control a phone or certify live screenshots, Unicode, all apps, browser codecs, or all host platforms. The CI badge links to the repository's `validate.yml` lane; consult its actual run rather than treating a badge as hardware evidence.
 
-Bash/Python syntax validation and Linux package checks are distinct from native PowerShell execution. PowerShell examples were not executed on Linux. For a new device/platform claim, report separately the host, device OS, dependency version, approved action, fresh decoded readback and restoration result—without uploading private screenshots or identifiers.
+Bash/Python syntax validation and Linux package checks are distinct from native PowerShell execution. The Windows refusal test mocks only the OS guard in an offline Linux subprocess; it is not native Windows execution. PowerShell examples were not executed on Linux. For a new device/platform claim, report separately the host, device OS, dependency version, approved action, fresh decoded readback and restoration result—without uploading private screenshots or identifiers.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -396,7 +416,7 @@ Proposed evidence work, not promises of already-tested compatibility:
 - [ ] Add privacy-safe native Windows USB and PowerShell execution reports.
 - [ ] Investigate browser HEVC capability detection and document a confirmed video-only viewing path.
 - [ ] Characterize Unicode and benign app-field input with exact readback and restoration.
-- [ ] Document wireless iPhone behavior only after explicit pairing/network approval and live verification.
+- [ ] Extend same-LAN Wi-Fi device coverage beyond the exercised Linux/iOS combination.
 
 See [open issues][issues-url] for proposals and known issues. Core screenshot, tap, ASCII type and touch-drag mechanisms are already described above; they are not deferred roadmap features.
 
@@ -422,7 +442,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing device procedures or evi
 
 ## License
 
-Original skill instructions, documentation and artwork are distributed under the **MIT License**. See [LICENSE](LICENSE).
+Original skill instructions, helper code, documentation and artwork are distributed under the **MIT License**. See [LICENSE](LICENSE).
 
 **pymobiledevice3 is a separate GPL-licensed upstream dependency**, installed from its own distribution. This repository does not redistribute that dependency, and its MIT license does not relicense pymobiledevice3. Apple developer-support assets are obtained through upstream tooling, not shipped as repository content. The [Best-README-Template][readme-template-url] structure is credited below; its upstream template is offered under the Unlicense.
 
