@@ -67,7 +67,7 @@ def main():
     results = []
     helper = ROOT / 'scripts/network_control.py'
     results.append({'name': 'helper-entrypoint', 'passed': helper.is_file()})
-    scratch = Path(os.environ.get('TMPDIR', ROOT / '.artifacts/test-runs'))
+    scratch = Path(os.environ.get('TMPDIR') or os.environ.get('RUNNER_TEMP') or (ROOT.parent / '.iphone-network-cli-test-runs'))
     scratch.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='iphone-network-cli-', dir=scratch) as tmp:
         root = Path(tmp)
